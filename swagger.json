@@ -1,0 +1,297 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is sample Stock service application. You can perform various operations on `stock` object using this API",
+    "version": "1.0.0",
+    "title": "Stock API",
+    "contact": {
+      "email": "nadkarni.shweta@gmail.com"
+    }
+  },
+  "host": "localhost:8081",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "stocks",
+      "description": "Everything about stocks"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/stocks": {
+      "get": {
+        "tags": [
+          "stocks"
+        ],
+        "summary": "Finds all Stocks available in the system",
+        "description": "Optional attributes `page` and `size` can be provided as a query parameter to get result in the form of pages. Either none or both should be present",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Size of the result",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "requested page number",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StockListData"
+              }
+            }
+          },
+          "404": {
+            "description": "No stock information available in the system matching with input criteria"
+          },
+          "500": {
+            "description": "Internal system error. Technical failure at Service side"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "stocks"
+        ],
+        "summary": "Add a information about new stock in the System",
+        "description": "This operation creates new stock resource in the System. Currently no duplicate checks are implemented. This service returns created stock object in the response.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stock object that needs to be added to the System",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Stock"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "new Stock details are added successfully in the System",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Stocks"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input. Name and/or price of the stock missing in the request"
+          },
+          "422": {
+            "description": "Stock details are not added in the System."
+          },
+          "500": {
+            "description": "Internal system error. Technical failure at Service side"
+          }
+        }
+      }
+    },
+    "/{id}/price": {
+      "put": {
+        "tags": [
+          "stocks"
+        ],
+        "summary": "Update current price of an existing Stock",
+        "description": "This operation updates current price of the stock available in request for stock `id`. It returns the updated stock object in the response. Must be > 0",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identification number associated with particular Stock resource whose price needs to be updated.",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Current price of the stock which needs to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Stock"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Stocks"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid stock id or/and current price in the request"
+          },
+          "404": {
+            "description": "Stock details not found"
+          },
+          "500": {
+            "description": "Internal system error. Technical failure at Service side"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "stocks"
+        ],
+        "summary": "Finds particular Stock based on input id",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identification number associated with particular Stock resource whose price needs to be updated. Must be > 0",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Stocks"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid stock id."
+          },
+          "404": {
+            "description": "Stock details not found"
+          },
+          "500": {
+            "description": "Internal system error. Technical failure at Service side"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Stock": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique auto generated identification number (id)",
+          "format": "long"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "description": "Timestamp when particular stock details were last updated/created",
+          "format": "date-time"
+        },
+        "currentPrice": {
+          "type": "string",
+          "description": "Current price of the stock",
+          "format": "BigDecimal"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the stock",
+          "format": "string"
+        }
+      },
+      "xml": {
+        "name": "Stock"
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "rel": {
+          "type": "string",
+          "description": "Name of the Link"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri",
+          "description": "Uri as per HATEOAS standards"
+        }
+      },
+      "xml": {
+        "name": "links"
+      }
+    },
+    "Stocks": {
+      "type": "object",
+      "properties": {
+        "stock": {
+          "$ref": "#/definitions/Stock"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "xml": {
+        "name": "Stocks"
+      }
+    },
+    "StockListData": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "$ref": "#/definitions/Stocks"
+        },
+        "_links": {
+          "$ref": "#/definitions/links"
+        },
+        "currentPage": {
+          "type": "integer",
+          "format": "int",
+          "description": "Number of current page"
+        },
+        "itemsPerPage": {
+          "type": "integer",
+          "format": "int",
+          "description": "Number of stock details available in current page"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int",
+          "description": "Total number of stocks availble in the System"
+        }
+      },
+      "xml": {
+        "name": "StockListData"
+      }
+    }
+  }
+}
