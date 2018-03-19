@@ -1,0 +1,94 @@
+
+<div class="container-fluid ng-scope" data-ng-controller="homeCtrl" data-ng-init="getAllStocks()">
+
+    <div id="noFlightFoundInfo" class="alert alert-info" role="alert" ng-show="isErrorPresent">System could not retrieve list of stocks. Try again later.!!</div>
+    <div class="row content">
+        <div class="col-sm-12" style="padding:0;">
+            <div class="hidden-xs hidden-xxs">
+
+                    <div class="col-md-6">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Company List (NASDAQ, NYSE,AMEX)</div>
+                                <div class="panel-body">
+                                    
+                             <table class="table table-hover">
+                                    <tr ng-repeat=" stockData in searchresults">
+                                    <td>
+                                        <div class="row" ng-click="selectStock(stockData)">
+                                            <div class="row col-md-10">
+                                                <span class="col-md-4 d-inline-block" data-toggle="tooltip" data-placement="top" title="Click to view details">
+                                                    {{stockData.stock.name}}
+                                                </span>                                           
+                                            </div>
+                                        </div>
+
+                                    </td>
+    
+                                    </tr>
+                                </table>
+                                                    
+                                    
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                        	 
+                        </div>
+
+                    </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="row content">
+
+        <div class="alert alert-info">
+            <strong>Note!</strong> Click on Stock name to view details.
+        </div>
+
+        <div class="modal fade" id="singleStockDetailsModel" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">You are viewing details of {{selectedStockDetails.name}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset>
+                            <fieldset class="ocf-nested-group">
+                                                   
+                                <div class="form-group row">
+                                    <label for="currentPrice" class="col-sm-2 col-form-label">Current Price</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="currentPrice" readonly value={{selectedStockDetails.currentPrice}}>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lastUpdatedTime" class="col-sm-2 col-form-label">Last updated on</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="lastUpdatedTime" readonly value={{selectedStockDetails.lastUpdateTime}}>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </fieldset>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+
